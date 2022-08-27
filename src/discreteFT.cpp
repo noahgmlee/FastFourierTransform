@@ -63,7 +63,6 @@ void discreteFT :: fft_recursive(float data[][2], int SIZE){
 
 	//Once the even and odd DFT's are calculated and returned perform the FFT math
 	//X(k) = Even(k) + W(N/SIZE*k%N) * Odd(k)
-	//Add a threshold filter for close to zero values (same as with the N^2 DFT)
 	for (int k = 0; k < SIZE/2; k++){
 		int W_index = N/SIZE*k;
 		int EO_index = k;
