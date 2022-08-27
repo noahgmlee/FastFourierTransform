@@ -45,16 +45,17 @@ void discreteFT :: fft_recursive(float data[][2], int SIZE){
 		data[1][1] = 0.0;
 		return;
 	}
+
 	//Create the even and odd data out of the input array
 	float data_even[SIZE/2][2];
 	float data_odd[SIZE/2][2];
 
-	// populate the even and odd data from the input array
-	for (int i = 0; i < SIZE/2; i++){
-		data_even[i][0] = data[2*i][0];
-		data_even[i][1] = data[2*i][1];
-		data_odd[i][0] = data[2*i+1][0];
-		data_odd[i][1] = data[2*i+1][1];
+	//populate the even and odd data from the input array
+	for (int r = 0; r < SIZE/2; r++){
+		data_even[r][0] = data[2*r][0];
+		data_even[r][1] = 0.0;
+		data_odd[r][0] = data[2*r+1][0];
+		data_odd[r][1] = 0.0;
 	}
 
 	//Recursively treat the even and odd indexed input arrays as SIZE/2 DFT's
@@ -65,15 +66,15 @@ void discreteFT :: fft_recursive(float data[][2], int SIZE){
 	//X(k) = Even(k) + W(N/SIZE*k%N) * Odd(k)
 	for (int k = 0; k < SIZE/2; k++){
 		int W_index = N/SIZE*k;
-		int EO_index = k;
-		float WXOdd [2];
-		WXOdd[0] = this->W[W_index][0]*data_odd[EO_index][0] - this->W[W_index][1]*data_odd[EO_index][1];
-		WXOdd[1] = this->W[W_index][0]*data_odd[EO_index][1] + this->W[W_index][1]*data_odd[EO_index][0];
-		data[k][0] = data_even[EO_index][0] + WXOdd[0];
-		data[k][1] = data_even[EO_index][1] + WXOdd[1];
-		data[k+SIZE/2][0] = data_even[EO_index][0] - WXOdd[0];
-		data[k+SIZE/2][1] = data_even[EO_index][1] - WXOdd[1];
+		float WXOdd[2];
+		WXOdd[0] = this->W[W_index][0]*data_odd[k][0] - this->W[W_index][1]*data_odd[k][1];
+		WXOdd[1] = this->W[W_index][0]*data_odd[k][1] + this->W[W_index][1]*data_odd[k][0];
+		data[k][0] = data_even[k][0] + WXOdd[0];
+		data[k][1] = data_even[k][1] + WXOdd[1];
+		data[k+SIZE/2][0] = data_even[k][0] - WXOdd[0];
+		data[k+SIZE/2][1] = data_even[k][1] - WXOdd[1];
 	}
+
 }
 
 void discreteFT :: dft(){
